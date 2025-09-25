@@ -873,7 +873,7 @@ class LivewireDatatable extends Component
     public function showGroup($group): void
     {
         foreach ($this->columns as $key => $column) {
-            if ($column['group'] === $group) {
+            if (($column['group'] ?? null) === $group) {
                 $this->columns[$key]['hidden'] = false;
             }
         }
@@ -884,7 +884,7 @@ class LivewireDatatable extends Component
     public function hideGroup($group): void
     {
         foreach ($this->columns as $key => $column) {
-            if ($column['group'] === $group) {
+            if (($column['group'] ?? null) === $group) {
                 $this->columns[$key]['hidden'] = true;
             }
         }
@@ -898,7 +898,7 @@ class LivewireDatatable extends Component
     public function isGroupVisible($group): bool
     {
         foreach ($this->columns as $column) {
-            if ($column['group'] === $group && $column['hidden']) {
+            if (($column['group'] ?? null) === $group && $column['hidden']) {
                 return false;
             }
         }
@@ -912,7 +912,7 @@ class LivewireDatatable extends Component
     public function isGroupHidden($group): bool
     {
         foreach ($this->columns as $column) {
-            if ($column['group'] === $group && !$column['hidden']) {
+            if (($column['group'] ?? null) === $group && !$column['hidden']) {
                 return false;
             }
         }
@@ -1532,10 +1532,10 @@ class LivewireDatatable extends Component
                 if (isset($this->freshColumns[$index]) && $this->columnIsAggregateRelation($this->freshColumns[$index])) {
                     $this->addAggregateFilter($query, $index, $filter);
                 } else {
-                        $this->addScopeNumberFilter($query, $index, [
-                            $filter['start'] ?? 0,
-                            $filter['end'] ?? 9999999999,
-                        ]) ?? $query->when(isset($filter['start']), function ($query) use ($filter, $index) {
+                    $this->addScopeNumberFilter($query, $index, [
+                        $filter['start'] ?? 0,
+                        $filter['end'] ?? 9999999999,
+                    ]) ?? $query->when(isset($filter['start']), function ($query) use ($filter, $index) {
                         $query->whereRaw($this->getColumnFilterStatement($index)[0] . ' >= ?', $filter['start']);
                     })->when(isset($filter['end']), function ($query) use ($filter, $index) {
                         if (isset($this->freshColumns[$index]['round']) && $this->freshColumns[$index]['round'] !== null) {
@@ -1786,9 +1786,9 @@ class LivewireDatatable extends Component
 
     public function highlight($value, $string)
     {
-//        if ($this->isRtl($value)) {
-//            $output = $string;
-//        }
+        //        if ($this->isRtl($value)) {
+        //            $output = $string;
+        //        }
         $output = substr($value, stripos($value, $string), strlen($string));
 
         if ($value instanceof View) {
@@ -1811,7 +1811,7 @@ class LivewireDatatable extends Component
 
     public function export(string $filename = 'DatatableExport.xlsx'): BinaryFileResponse
     {
-//        $this->forgetComputed();
+        //        $this->forgetComputed();
 
         $export = new DatatableExport($this->getExportResultsSet());
         $export->setFilename($filename);
@@ -1865,7 +1865,7 @@ class LivewireDatatable extends Component
             $this->visibleSelected = $this->selected;
         }
 
-//        $this->forgetComputed();
+        //        $this->forgetComputed();
     }
 
     public function updatedSelected(): void
